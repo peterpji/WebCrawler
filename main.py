@@ -8,10 +8,12 @@ from spider import Spider
 logging.getLogger().setLevel(15)
 
 DOMAIN = "http://www.hs.fi/"
-QUEUE_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'output', "queue.txt")
-CRAWLED_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'output', "crawled.txt")
-MAX_ITERATIONS = 1000000
+MAX_ITERATIONS = 10_000
 TCP_CONNECTOR_LIMIT = 1_000
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+QUEUE_FILE = os.path.join(current_dir, 'output', "queue.txt")
+CRAWLED_FILE = os.path.join(current_dir, 'output', "crawled.txt")
 
 
 async def main():
