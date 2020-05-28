@@ -41,6 +41,6 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
     loop.close()
-    # asyncio.run(main())
+    # asyncio.run(main()) # In the current Python version, this command causes an exception on Windows. The issue should be patched soon according to the forums. Replaces the manual event loop management.
 
     logging.info('Time taken: %s', time.time()-start)
