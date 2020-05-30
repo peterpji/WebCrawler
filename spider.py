@@ -9,9 +9,9 @@ from html_link_parser import Html_link_parser
 
 
 class Spider:
-    def __init__(self, connector, queue_file, crawled_file, domain):
+    def __init__(self, session, queue_file, crawled_file, domain):
         self.count_crawled = 0
-        self.session = aiohttp.ClientSession(connector=connector)
+        self.session = session
         self.queue_file = queue_file
         self.crawled_file = crawled_file
         self.domain = self._normalize_domain(domain)
@@ -28,14 +28,11 @@ class Spider:
             logging.warning(f"Domain {domain} is already crawled")
 
 
-    def __del__(self):
-        self._update_files()
-        asyncio.gather(self.session.close())
-        logging.info('Files saved on exit')
-
-
     async def crawl_next_from_queue(self):
-        link = self.queue.__iter__().__next__()
+        if not self.queue:
+            return
+
+        link = self.queue.pop()
         assert self._normalize_domain(link) == self.domain
 
         page_content = await self._get_page(link)
@@ -44,9 +41,21 @@ class Spider:
 
         self._update_crawled_queue_sets(found_links, link)
 
-        self.count_crawled += 1
-        if self.count_crawled % 20 == 0:
-            self._update_files()
+
+    async def crawl_batch(self, batch_size):
+        if not self.queue:
+            return
+
+        tasks = []
+        for _ in range(batch_size):
+            if self.queue:
+                tasks.append(self.crawl_next_from_queue())
+            else:
+                logging.info('Queue empty. Finishing batch')
+                break
+        await asyncio.gather(*tasks)
+        self.save_results()
+        self.status_report()
 
 
     def status_report(self):
@@ -85,7 +94,6 @@ class Spider:
                 self.queue.add(link)
 
         self.crawled.add(source_page_url)
-        self.queue.remove(source_page_url)
 
 
     def _update_files(self):
