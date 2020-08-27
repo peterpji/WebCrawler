@@ -15,5 +15,5 @@ main.py has a few global variables which act as the config of the software.
 The performance of the crawler is quite high due to quick parsing with lxml and asyncronous web requests. Small improvements could be made to CPU speed by switching completely from bs4 to lxml. However, the main bottleneck is internet speed so CPU usage optimization does not seem very productive.
 
 # Dependencies
-Python 3.8.1+
+Python 3.8.1+  
 requirements.txt
