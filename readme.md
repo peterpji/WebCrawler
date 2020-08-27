@@ -16,4 +16,4 @@ The performance of the crawler is quite high due to quick parsing with lxml and 
 
 # Dependencies
 Python 3.8.1+
-Additional libraries: aiohttp, bs4, lxml
+requirements.txt
