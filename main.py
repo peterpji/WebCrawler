@@ -7,14 +7,14 @@ from spider import Spider
 
 logging.getLogger().setLevel(15)
 
-DOMAIN = "http://www.hs.fi/"
+DOMAIN = 'http://www.hs.fi/'
 MAX_BATCHES = 100
 TCP_CONNECTOR_LIMIT = 1_000
 CRAWL_BATCH_SIZE = 100
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
-QUEUE_FILE = os.path.join(current_dir, 'output', "queue.txt")
-CRAWLED_FILE = os.path.join(current_dir, 'output', "crawled.txt")
+QUEUE_FILE = os.path.join(current_dir, 'output', 'queue.txt')
+CRAWLED_FILE = os.path.join(current_dir, 'output', 'crawled.txt')
 
 
 async def main():
@@ -32,7 +32,7 @@ async def main():
     await asyncio.sleep(0.2)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     start = time.time()
     asyncio.run(main())
-    logging.info('Time taken: %s', time.time()-start)
+    logging.info('Time taken: %s', time.time() - start)

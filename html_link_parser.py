@@ -1,14 +1,11 @@
 import logging
-from bs4 import BeautifulSoup, SoupStrainer
 import lxml.html
 
 
-class Html_link_parser(object):
-
+class Html_link_parser:
     def __init__(self, html_page, source_url):
         self.raw_href_list = self._html_parser(html_page)
         self.constructed_urls = self._construct_urls(self.raw_href_list, source_url)
-
 
     def _html_parser(self, html_page):
         tree = lxml.html.document_fromstring(html_page.encode())
@@ -21,7 +18,6 @@ class Html_link_parser(object):
 
         return raw_href_list
 
-
     def _construct_urls(self, raw_href_list, source_url):
 
         constructed_urls = []
@@ -31,7 +27,7 @@ class Html_link_parser(object):
             if not link:
                 continue
 
-            if '.' not in link.replace('//','').split('/')[0]:
+            if '.' not in link.replace('//', '').split('/')[0]:
                 if '/' != link[0]:
                     constructed_urls.append('/'.join(source_url.split('/')[:-1] + [link]))
                 else:
@@ -53,28 +49,27 @@ class Html_link_parser(object):
 
         return constructed_urls
 
-
-    def _construct_urls_v2(self, raw_href_list, source_url): # TODO: FINISH
+    def _construct_urls_v2(self, raw_href_list, source_url):  # TODO: FINISH
         import re
 
         def split_url(link):
             schema = re.match(r'^[a-zA-Z0-9]+:[//]', link)
             if schema:
                 schema = schema.group()
-                link = link[len(schema):]
+                link = link[len(schema) :]
             else:
                 schema = ''
 
             if '.' in str(link + '/').split('/')[0]:
                 netloc = re.match(r'^[a-zA-Z0-9-_.]+', link)
                 if netloc:
-                    link = link[len(netloc):]
+                    link = link[len(netloc) :]
                 else:
                     netloc = ''
 
                 port = re.match(r'^:[0-9]+', link)
                 if port:
-                    link = link[len(port):]
+                    link = link[len(port) :]
                 else:
                     port = ''
 
@@ -132,7 +127,7 @@ class Html_link_parser(object):
         return constructed_urls
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     source_url = 'http://hs.fi/kotimaa/art-2000006331170.html/'
     html = "<html><head class='jee'><title>Test</title></head><body><h1>Parse me! <a class='link' href='www.google.com' aProp='jee2'>Here is Google</a><a class='link' href='/home' aProp='jee2'>And here is home</a><a></a><a href=http://google.com></a><a href=https://google.com></a><a href=https://google.com/images></a><a href=acdc></a></h1></body><a href=#page-main-content></a></html>"
     parser = Html_link_parser(html, source_url)
